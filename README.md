@@ -66,7 +66,7 @@ API for extracting and serving extracted scenes from youtube videos
     "python: can't open file 'run.py': [Errno 2] No such file or directory"
     ```
     This one is, apparently, is due to the virtual enviroment. To fix it, just
-    rebuild the *venv* from [scratch](####dependencies) to solve it.
+    rebuild the *venv* from [scratch](#dependencies) to solve it.
     
 * #### Running Api
     On your terminal, run the server using this one simple command:

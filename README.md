@@ -37,10 +37,17 @@ API for extracting and serving extracted scenes from youtube videos
 * #### Environment Variables
     Create a .env file and add the following:
     ```
-    source venv/bin/activate
-    export SECRET="some-very-long-string-of-random-characters"
-    export APP_SETTINGS="development"
+    $ source venv/bin/activate
+    $ export FLASK_APP="run.py"
+    $ export SECRET="some-very-long-string-of-random-characters"	
+    $ export APP_SETTINGS="development"
     ```
+
+    For auto loading when files changes, set FLASK_DEBUG:
+    ```
+    $ export FLASK_DEBUG=1
+    ```
+    change to 0 on production enviroments.
 
     To create SECRET varible, you can use the command:
     ```
@@ -53,14 +60,31 @@ API for extracting and serving extracted scenes from youtube videos
     ```
     (venv)$ pip install -r requirements.txt
     ```
-
-* #### Running It
+    
+    **Note**: There is an issued that appear running the project:
+    ```
+    "python: can't open file 'run.py': [Errno 2] No such file or directory"
+    ```
+    This one is, apparently, is due to the virtual enviroment. To fix it, just
+    rebuild the *venv* from [scratch](#### Dependencies) to solve it.
+    
+* #### Running Api
+    On your terminal, run the server using this one simple command:
+    ```
+    (venv)$ python runapi.py
+    ```
+    You can now access the app on your local browser by using
+    ```
+    http://localhost:5000/api/
+    ```
+    Or test using Postman
+    
+* #### Running App
     On your terminal, run the server using this one simple command:
     ```
     (venv)$ flask run
     ```
     You can now access the app on your local browser by using
     ```
-    http://localhost:5000/youtube-scene-extraction-api/
+    http://localhost:5000/
     ```
-    Or test using Postman

@@ -10,8 +10,28 @@ def create_api(config_name):
 
     class Hello(Resource):
         def get(self):
-            return {'status': 'ok'}
+            return {'status': 'ok'}, 200
+
+    class VideoList(Resource):
+        # Retrieve a list of videos
+        def get(self):
+            pass
+
+    class Video(Resource):
+        # Retieve a single video information
+        def get(self):
+            pass
+
+        # Add a video
+        def post(self):
+            pass
+
+        # Delete a given video ID
+        def delete(self):
+            pass
 
     api.add_resource(Hello, '/api')
+    api.add_resource(VideoList, '/api/video')
+    api.add_resource(Video, '/api/video/<int:id>')
 
     return app

@@ -95,4 +95,4 @@ API for extracting and serving extracted scenes from youtube videos
     (venv)$ cd src/
     (venv)$ python runtests.py
     ```
-    This command will look on *tests* folder to files like *test_*.py*, to run tests.
+    This command will look on *tests* folder to files like *test_&ast;.py*, to run tests.

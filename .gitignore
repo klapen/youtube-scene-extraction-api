@@ -136,3 +136,9 @@ flycheck_*.el
 x
 # directory configuration
 .dir-locals.el
+
+# test helper
+/src/tests/videos/*.txt
+
+# MacOS files
+.DS_*

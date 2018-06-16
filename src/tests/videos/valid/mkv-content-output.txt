@@ -1,0 +1,8 @@
+[PySceneDetect] Detecting scenes (content mode)...
+[PySceneDetect] Parsing video mkv-sample.mkv...
+[PySceneDetect] Video Resolution / Framerate: 480 x 270 / 25.000 FPS
+Verify that the above parameters are correct (especially framerate, use --force-fps to correct if required).
+[PySceneDetect] Processing complete, found 3 scenes in video.
+[PySceneDetect] Processed 5401 frames in 39.3 secs (avg. 137.4 FPS).
+[PySceneDetect] Comma-separated timecode output:
+00:00:35.120,00:01:39.320,00:03:27.520

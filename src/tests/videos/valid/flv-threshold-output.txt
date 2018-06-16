@@ -1,0 +1,8 @@
+[PySceneDetect] Detecting scenes (threshold mode)...
+[PySceneDetect] Parsing video flv-sample.flv...
+[PySceneDetect] Video Resolution / Framerate: 480 x 270 / 25.000 FPS
+Verify that the above parameters are correct (especially framerate, use --force-fps to correct if required).
+[PySceneDetect] Processing complete, found 3 scenes in video.
+[PySceneDetect] Processed 5401 frames in 11.8 secs (avg. 457.7 FPS).
+[PySceneDetect] Comma-separated timecode output:
+00:00:00.160,00:00:13.880,00:03:27.080

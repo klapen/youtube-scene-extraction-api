@@ -1,0 +1,8 @@
+[PySceneDetect] Detecting scenes (threshold mode)...
+[PySceneDetect] Parsing video 3gp-sample.3gp...
+[PySceneDetect] Video Resolution / Framerate: 352 x 288 / 25.000 FPS
+Verify that the above parameters are correct (especially framerate, use --force-fps to correct if required).
+[PySceneDetect] Processing complete, found 3 scenes in video.
+[PySceneDetect] Processed 5401 frames in 8.8 secs (avg. 615.4 FPS).
+[PySceneDetect] Comma-separated timecode output:
+00:00:00.160,00:00:13.880,00:03:27.080

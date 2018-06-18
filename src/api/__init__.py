@@ -43,7 +43,7 @@ def create_api(config_name):
                 return {'error': 'Video extension not supported.'}, 400
 
             res = upload.upload_video(args['video'],args['title'],'ipsy')
-            return {'status': 'ok', 'info':res}, 200
+            return res, 500 if(res['status'] != 'ok') else 200
 
     class Video(Resource):
         # Retieve a single video information

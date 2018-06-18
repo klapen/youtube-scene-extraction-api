@@ -1,5 +1,6 @@
 import unittest, json, os
-import glob
+import glob, mock
+import api
 from api import create_api
 
 class VideoRequests(unittest.TestCase):
@@ -8,9 +9,18 @@ class VideoRequests(unittest.TestCase):
         """Define test variables and initialize app."""
         self.app = create_api("testing")
         self.client = self.app.test_client
+
         # binds the app to the current context
         ctx = self.app.app_context()
         ctx.push()
+
+        # Mock upload module
+        self.upload_patch = mock.patch("api.upload")
+        self.mock_upload = self.upload_patch.start()
+
+    def tearDown(self):
+        # Stop upload module
+        self.mock_upload = self.upload_patch.stop()
 
     def test_video_upload_missing_argument(self):
         """Test API upload video missing arguments"""
@@ -48,14 +58,16 @@ class VideoRequests(unittest.TestCase):
         """Test API upload video valid extensions"""
         test_files = glob.glob("tests/videos/valid/*-sample.*")
         for test in test_files:
+            self.mock_upload.upload_video.return_value = False
             print(open(test, 'rb'))
+            video = open(test, 'rb')
             res = self.client().post('/api/video',data= dict(
-                title = 'Test video',
-                video = open(test, 'rb')
-            ))
-            self.assertEqual(res.status_code, 200)
-            self.assertEqual({'status':'ok'}, json.loads(res.data))
-        
+                title = 'Test video '+test,
+                video = video))
+            # ToDo: change ANY for the actual file call
+            self.mock_upload.upload_video.assert_called_with(mock.ANY,'Test video '+ test,'ipsy')
+            self.assertEqual(False,json.loads(res.data)['info'])
 
+    
 suite = unittest.TestLoader().loadTestsFromTestCase(VideoRequests)
 unittest.TextTestRunner(verbosity=2).run(suite)

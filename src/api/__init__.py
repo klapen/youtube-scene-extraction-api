@@ -2,6 +2,7 @@ from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from werkzeug.datastructures import FileStorage
 from instance.config import app_config
+import upload
 
 ALLOWED_EXTENSIONS = set(['3gp', 'avi', 'flv', 'mkv', 'mov', 'mp4','mpg','wmv'])
 UPLOAD_FOLDER = 'uploads'
@@ -40,8 +41,9 @@ def create_api(config_name):
                 return {'error': 'Title cannot be blank.'}, 400
             if not allowed_file(args['video'].filename):
                 return {'error': 'Video extension not supported.'}, 400
-            
-            return {'status': 'ok'}, 200
+
+            res = upload.upload_video(args['video'],args['title'],'ipsy')
+            return {'status': 'ok', 'info':res}, 200
 
     class Video(Resource):
         # Retieve a single video information
@@ -57,3 +59,4 @@ def create_api(config_name):
     api.add_resource(Video, '/api/video/<int:id>')
 
     return app
+

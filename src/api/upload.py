@@ -1,4 +1,4 @@
-def upload_video(video, title, bucket_name):
+def youtube(video, title, bucket_name):
     """Uploads a given StringIO object to S3. Closes the file after upload.
 
     Returns the URL for the object uploaded.
@@ -11,4 +11,4 @@ def upload_video(video, title, bucket_name):
     content_type -- content type that needs to be set for the S3 object.
     bucket_name -- name of the path where file needs to be uploaded.
     """
-    pass
+    return {'status':'ok'}

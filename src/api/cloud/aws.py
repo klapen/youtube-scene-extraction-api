@@ -16,13 +16,16 @@ class S3AwsUploader():
         if(not folder_name.endswith('/')):
             folder_name = folder_name+'/'
         return folder_name
+
+    def __getObjects(self,bucket_name,key):
+        bucket = boto3.resource('s3').Bucket(bucket_name)
+        return list(bucket.objects.filter(Prefix=key))
+
+    def folderExist(self,bucket_name, folder_name):
+        return len(self.__getObjects(bucket_name,folder_name)) > 0
         
     def objectExist(self, bucket_name, key):
-        try:
-            self.client.head_object(Bucket=bucket_name, Key=key)
-        except ClientError as e:
-            return int(e.response['Error']['Code']) != 404
-        return True
+        return len(self.__getObjects(bucket_name,key)) == 1
     
     def createFolder(self,name,bucket_name):
         name = self.__checkFolderString__(name)
@@ -31,17 +34,19 @@ class S3AwsUploader():
         else: 
             res = self.client.put_object(Bucket=bucket_name,Body='',Key=name)
             return 'ResponseMetadata' in res and res['ResponseMetadata']['HTTPStatusCode'] == 200
+
+    def bucketExist(self,bucket_name):
+        s3 = boto3.resource('s3')
+        return s3.Bucket(bucket_name) in s3.buckets.all()
         
-    def s3UploadFile(self,ufile,user_folder,bucket):
-        user_folder = self.__checkFolderString__(user_folder)
-        if(self.createFolder(user_folder,bucket)):
+    def uploadFile(self,ufile,user_folder,bucket_name):
+        if(self.bucketExist(bucket_name)):
+            user_folder = self.__checkFolderString__(user_folder)
             filename = ufile.filename.split('/')[-1]
             folder_name = filename.replace('.','-')+'/'
-            if(self.createFolder(user_folder+folder_name,bucket)):
-                # res = self.client.upload_fileobj(ufile, bucket, user_folder +folder_name + filename)
-                # return 'ResponseMetadata' in res and res['ResponseMetadata']['HTTPStatusCode'] == 200
-                return True
-            else:
-                return False
+            # Upload de file
+            self.client.upload_fileobj(ufile, bucket_name, user_folder +folder_name + filename)
+            # Check it was created, because upload_fileobj returns None
+            return self.objectExist(bucket_name, user_folder +folder_name + filename)
         else:
             return False

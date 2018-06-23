@@ -17,15 +17,15 @@ class S3AwsUploader():
             folder_name = folder_name+'/'
         return folder_name
 
-    def __getObjects(self,bucket_name,key):
+    def getObjects(self,bucket_name,key):
         bucket = boto3.resource('s3').Bucket(bucket_name)
         return list(bucket.objects.filter(Prefix=key))
 
     def folderExist(self,bucket_name, folder_name):
-        return len(self.__getObjects(bucket_name,folder_name)) > 0
+        return len(self.getObjects(bucket_name,folder_name)) > 0
         
     def objectExist(self, bucket_name, key):
-        return len(self.__getObjects(bucket_name,key)) == 1
+        return len(self.getObjects(bucket_name,key)) == 1
     
     def createFolder(self,name,bucket_name):
         name = self.__checkFolderString__(name)

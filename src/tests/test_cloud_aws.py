@@ -1,7 +1,8 @@
-import unittest, mock, copy, glob
+import unittest, mock, copy, glob, random, string
 import boto3
 from api.cloud.aws import S3AwsUploader
 from botocore.stub import Stubber
+from StringIO import StringIO as strio
 
 from botocore.exceptions import ClientError
 
@@ -41,9 +42,8 @@ class AwsCloudUpload(unittest.TestCase):
         """*-*-*- Clean test variables."""
         # Delete created files
         if(self.delete_files):
-            print("Delete files")
             aws_bucket = boto3.resource('s3').Bucket(self._test_bucket_name)
-            aws_bucket.objects.filter(Prefix="user-test").delete()
+            aws_bucket.objects.filter(Prefix=self._user_folder).delete()
 
     def test_cloud_client_config(self):
         """ *-*-*- Test client configuration """
@@ -82,5 +82,29 @@ class AwsCloudUpload(unittest.TestCase):
         """*-*-*- Test cloud module to upload file to S3 creating required folders."""
         self.upload_test_file('avi-sample.avi', self.new_user_file)
            
+    def test_cloud_list_fodler_items(self):
+        # Upload test files
+        folder_name = 'test-folder-'+id_generator(size=2)+'/'
+        test_keys = []
+        for _ in range(random.randint(3,15)):
+            filename = 'test-file-'+id_generator(size=4)
+            data = strio(id_generator(size=100))
+            self.client.upload_fileobj(data,self._test_bucket_name,
+                                       self._user_folder+folder_name+filename)
+            test_keys.append(self._user_folder+folder_name+filename)
+
+        res = self.uploader.getObjects(self._test_bucket_name,self._user_folder)
+        for item in res:
+            try:
+                test_keys.remove(item.key)
+            except ValueError:
+                self.fail('File not found on list')
+            except:
+                self.fail('Exception raise')
+
+        self.assertTrue(len(test_keys) == 0)
+
+        self.delete_files = True
+    
 suite = unittest.TestLoader().loadTestsFromTestCase(AwsCloudUpload)
 unittest.TextTestRunner(verbosity=2).run(suite)

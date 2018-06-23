@@ -82,8 +82,8 @@ class AwsCloudUpload(unittest.TestCase):
         """*-*-*- Test cloud module to upload file to S3 creating required folders."""
         self.upload_test_file('avi-sample.avi', self.new_user_file)
            
-    def test_cloud_list_fodler_items(self):
-        # Upload test files
+    def test_cloud_list_folder_items(self):
+        """*-*-*- Test cloud module to list files on folders."""
         folder_name = 'test-folder-'+id_generator(size=2)+'/'
         test_keys = []
         for _ in range(random.randint(3,15)):

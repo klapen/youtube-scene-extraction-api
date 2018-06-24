@@ -17,6 +17,17 @@ class S3AwsUploader():
             folder_name = folder_name+'/'
         return folder_name
 
+    def deleteObjects(self,bucket_name,objects):
+        res = self.client.delete_objects(Bucket=bucket_name,Delete={'Objects':objects})
+        for deleted in res['Deleted']:
+            objects.remove(deleted)
+        return {'status': res['ResponseMetadata']['HTTPStatusCode'],
+                'no_deleted': objects}
+    
+    def deleteObject(self,bucket_name,key):
+        res = self.client.delete_object(Bucket=bucket_name,Key=key)
+        return res['ResponseMetadata']['HTTPStatusCode'] == 204
+
     def getObjects(self,bucket_name,key):
         bucket = boto3.resource('s3').Bucket(bucket_name)
         return list(bucket.objects.filter(Prefix=key))

@@ -81,28 +81,69 @@ class AwsCloudUpload(unittest.TestCase):
     def test_cloud_upload_new_user_file(self):
         """*-*-*- Test cloud module to upload file to S3 creating required folders."""
         self.upload_test_file('avi-sample.avi', self.new_user_file)
-           
-    def test_cloud_list_folder_items(self):
-        """*-*-*- Test cloud module to list files on folders."""
+
+    def upload_test_files(self):
+        res = []
         folder_name = 'test-folder-'+id_generator(size=2)+'/'
-        test_keys = []
         for _ in range(random.randint(3,15)):
             filename = 'test-file-'+id_generator(size=4)
             data = strio(id_generator(size=100))
             self.client.upload_fileobj(data,self._test_bucket_name,
                                        self._user_folder+folder_name+filename)
-            test_keys.append(self._user_folder+folder_name+filename)
+            res.append(self._user_folder+folder_name+filename)
+        return res
 
-        res = self.uploader.getObjects(self._test_bucket_name,self._user_folder)
-        for item in res:
+    def ckeck_items_on_list(self,items,lst_to_check):
+        for item in items:
             try:
-                test_keys.remove(item.key)
-            except ValueError:
-                self.fail('File not found on list')
+                if(item.key in lst_to_check):
+                    lst_to_check.remove(item.key)
             except:
                 self.fail('Exception raise')
+        return lst_to_check
+           
+    def test_cloud_list_folder_items(self):
+        """*-*-*- Test cloud module to list files on folders."""
+        test_keys = self.upload_test_files()
 
-        self.assertTrue(len(test_keys) == 0)
+        res = self.uploader.getObjects(self._test_bucket_name,self._user_folder)
+        self.assertTrue(len(self.ckeck_items_on_list(res,test_keys)) == 0)
+
+        self.delete_files = True
+
+    def test_cloud_delete_one_item(self):
+        test_keys = self.upload_test_files()
+        random.shuffle(test_keys)
+
+        rm_key = test_keys.pop()
+        self.assertTrue(self.uploader.deleteObject(self._test_bucket_name,rm_key))
+
+        res = self.uploader.getObjects(self._test_bucket_name,self._user_folder)
+        self.assertTrue(len([i for i,_ in enumerate(res) if _.key == rm_key]) == 0)
+        self.assertTrue(len(self.ckeck_items_on_list(res,test_keys)) == 0)
+
+        self.delete_files = True
+        
+
+    def test_cloud_delete_items(self):
+        """*-*-*- Test cloud module to delete files."""
+        test_keys = self.upload_test_files()
+        random.shuffle(test_keys)
+        
+        rm_keys = test_keys[::2]
+        rm_len = len(rm_keys)
+        del_objs = []
+        for key in rm_keys:
+            del_objs.append({'Key':key})
+
+        del_res = self.uploader.deleteObjects(self._test_bucket_name,del_objs)
+        self.assertTrue(del_res['status'] == 200)
+        self.assertTrue(len(del_res['no_deleted']) == 0)
+
+        left_keys = [x for x in test_keys if x not in rm_keys]
+        res = self.uploader.getObjects(self._test_bucket_name,self._user_folder)
+        self.assertTrue(len(self.ckeck_items_on_list(res,rm_keys)) == rm_len)
+        self.assertTrue(len(self.ckeck_items_on_list(res,left_keys)) == 0)
 
         self.delete_files = True
     

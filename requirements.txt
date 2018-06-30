@@ -10,9 +10,6 @@ Flask==1.0.2
 Flask-RESTful==0.3.6
 funcsigs==1.0.2
 futures==3.2.0
-google-auth==1.5.0
-google-auth-httplib2==0.0.3
-google-auth-oauthlib==0.2.0
 httplib2==0.11.3
 idna==2.7
 itsdangerous==0.24

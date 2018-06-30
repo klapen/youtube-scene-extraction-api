@@ -140,5 +140,8 @@ x
 # test helper
 /src/tests/videos/*.txt
 
+# temporary folder
+tmp/
+
 # MacOS files
 .DS_*

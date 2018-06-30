@@ -17,10 +17,13 @@ Jinja2==2.10
 jmespath==0.9.3
 MarkupSafe==1.0
 mock==2.0.0
+numpy==1.14.5
 oauthlib==2.1.0
+opencv-python==3.4.1.15
 pbr==4.0.4
 pyasn1==0.4.3
 pyasn1-modules==0.2.2
+PySceneDetect==0.3.4
 python-dateutil==2.7.3
 pytz==2018.4
 requests==2.19.1

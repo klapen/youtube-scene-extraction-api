@@ -43,6 +43,7 @@ API for extracting and serving extracted scenes from youtube videos
     $ export APP_SETTINGS="development"
     $ export AWS_ACCESS_KEY_ID="aws_access_key_id"
     $ export AWS_SECRET_ACCESS_KEY="aws_secret_access_key"
+    $ export APP_TEMP_FOLDER="path/to/repo/tmp"
     ```
 
     For auto loading when files changes, set FLASK_DEBUG:

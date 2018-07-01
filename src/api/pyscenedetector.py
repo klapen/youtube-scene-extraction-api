@@ -31,10 +31,10 @@ def video_detection(filepath,detector,username,save_images = False):
 
     # Organize frames
     path, filename = os.path.split(filepath)
-    scenes_file = glob.glob(filename+'.Scene*-OUT.jpg')
-    output_path = os.path.join(*[os.getenv('APP_TEMP_FOLDER'),'username',filename.split('.')[:-1]])
+    scene_files = glob.glob(filename+'.Scene*-OUT.jpg')
+    output_path = reduce(os.path.join,[os.getenv('APP_TEMP_FOLDER'),username,filename.split('.')[:-1][0]])
     output_lambda = lambda x : os.path.join(output_path,x.replace('-OUT',''))
-    if not save_images:
+    if save_images:
         if not os.path.exists(output_path):
             os.makedirs(output_path)
 
@@ -49,4 +49,4 @@ def video_detection(filepath,detector,username,save_images = False):
     # create new list with scene boundaries in timecode strings ("HH:MM:SS.nnn").
     scene_list_tc = [scenedetect.timecodes.get_string(x) for x in scene_list_msec]
     return {'scenes_time': scene_list_tc,
-            'scenes_file': [output_lambda(x) for x in scenes_file] if scenes_file else [] }
+            'scenes_file': [output_lambda(x) for x in scene_files] if scene_files else [] }

@@ -71,7 +71,7 @@ class VideoRequests(unittest.TestCase):
         for test in test_files:
             upload_res = {'status':'ok','message': id_generator(size=12) }
             self.mock_upload.youtube.return_value = upload_res
-            //print(open(test, 'rb'))
+            print(open(test, 'rb'))
             video = open(test, 'rb')
             res = self.client().post('/api/video',data= dict(
                 title = 'Test video '+test,

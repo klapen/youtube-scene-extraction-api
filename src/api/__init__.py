@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 from werkzeug.datastructures import FileStorage
@@ -42,7 +43,7 @@ def create_api(config_name):
             if not allowed_file(args['video'].filename):
                 return {'error': 'Video extension not supported.'}, 400
 
-            res = upload.youtube(args['video'],args['title'],'ipsy')
+            res = upload.send_video(args['video'],args['title'],'ipsy')
             return res, 500 if(res['status'] != 'ok') else 200
 
     class Video(Resource):

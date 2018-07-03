@@ -50,14 +50,21 @@ class S3AwsUploader():
         s3 = boto3.resource('s3')
         return s3.Bucket(bucket_name) in s3.buckets.all()
         
-    def uploadFile(self,ufile,user_folder,bucket_name):
+    def uploadVideoFile(self,ufile,user_folder,bucket_name):
+        filename = ufile.filename.split('/')[-1]
+        return self.__upload(filename, filename.replace('.','-')+'/',
+                             ufile,user_folder,bucket_name)
+
+    def __upload(self,filename,folder_name,data,user_folder,bucket_name):
         if(self.bucketExist(bucket_name)):
             user_folder = self.__checkFolderString__(user_folder)
-            filename = ufile.filename.split('/')[-1]
-            folder_name = filename.replace('.','-')+'/'
             # Upload de file
-            self.client.upload_fileobj(ufile, bucket_name, user_folder +folder_name + filename)
+            self.client.upload_fileobj(data, bucket_name, user_folder +folder_name + filename)
             # Check it was created, because upload_fileobj returns None
-            return self.objectExist(bucket_name, user_folder +folder_name + filename)
+            return self.objectExist(bucket_name, user_folder + folder_name + filename)
         else:
             return False
+
+    def uploadFile(self,filepath,folder_name,user_folder,bucket_name):
+        with open(filepath) as fb:
+            return self.__upload(filepath.split('/')[-1],folder_name,fb,user_folder,bucket_name)

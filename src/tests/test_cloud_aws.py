@@ -3,7 +3,6 @@ import boto3
 from api.cloud.aws import S3AwsUploader
 from botocore.stub import Stubber
 from StringIO import StringIO as strio
-
 from botocore.exceptions import ClientError
 
 # Mock FileStorage
@@ -18,7 +17,7 @@ class AwsCloudUpload(unittest.TestCase):
     """ This is a functional test"""
     @classmethod
     def setUpClass(cls):
-        cls._test_bucket_name = 'ipsy'
+        cls._test_bucket_name = 'ipsy-tech-test'
         cls._user_folder = 'user-test/'
 
     def upload_test_file(self,filename,callback):
@@ -56,7 +55,7 @@ class AwsCloudUpload(unittest.TestCase):
     def bucket_exists(self, ufile, file_folder, filename):
         """ Callback function to test try upload file on non existing bucket """
         # Feature test
-        self.assertFalse(self.uploader.uploadFile(ufile,self._user_folder,self._test_bucket_name+'2'))
+        self.assertFalse(self.uploader.uploadVideoFile(ufile,self._user_folder,self._test_bucket_name+'2'))
         self.assertFalse(self.uploader.folderExist(self._test_bucket_name,self._user_folder))
         self.assertFalse(self.uploader.folderExist(self._test_bucket_name,self._user_folder+file_folder))
         self.assertFalse(self.uploader.objectExist(self._test_bucket_name,self._user_folder+file_folder+filename))
@@ -71,7 +70,7 @@ class AwsCloudUpload(unittest.TestCase):
 
     def new_user_file(self, ufile, file_folder, filename):
         """ Callback function for test upload file creating required folders """
-        self.assertTrue(self.uploader.uploadFile(ufile,self._user_folder,self._test_bucket_name))
+        self.assertTrue(self.uploader.uploadVideoFile(ufile,self._user_folder,self._test_bucket_name))
         self.assertTrue(self.uploader.folderExist(self._test_bucket_name,self._user_folder))
         self.assertTrue(self.uploader.folderExist(self._test_bucket_name,self._user_folder+file_folder))
         self.assertTrue(self.uploader.objectExist(self._test_bucket_name,self._user_folder+file_folder+filename))

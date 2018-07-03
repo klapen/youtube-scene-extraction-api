@@ -1,7 +1,7 @@
 import os, glob
 import scenedetect
 
-def video_detection(filepath,detector,username,save_images = False):
+def video_detection(filepath,detector,username,save_images = True):
     """Performs scene detection on passed file using given scene detector.
 
     args:

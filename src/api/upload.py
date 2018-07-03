@@ -36,8 +36,9 @@ def send_video(video, title, bucket_name, username, scene_detection_mode = 'cont
     except IOError as e:
         return {'status':'error','message':'Unable to write on temporary folder'}
 
+    scene_data = {}
     try:
-        psd.video_detection(os.path.join(tmp_folder,video.filename),scene_detection_mode, username)
+        scene_data = psd.video_detection(os.path.join(tmp_folder,video.filename),scene_detection_mode, username)
     except:
         return {'status':'error','message':'Error on scene detector module'}
 
@@ -47,7 +48,9 @@ def send_video(video, title, bucket_name, username, scene_detection_mode = 'cont
         fail_upload_files = []
         folder_name = video.filename.replace('.','-')+'/'
         for f in glob.glob(os.path.join(tmp_folder,video.filename+"*.jpg")):
-            if not aws_uploader.uploadFile(f,folder_name,username,bucket_name):
+            time = scene_data['scenes_time'][scene_data["scenes_file"].index(f)]
+            if not aws_uploader.uploadFile(f,folder_name,username,bucket_name,
+                                           metadata = {'video':video.filename,'time':time}):
                 fail_upload_files.append(f)
         if fail_upload_files:
             return {'status':'error','message':'Error uploading scene files', 'not_uploaded':fail_upload_files}

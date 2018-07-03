@@ -55,16 +55,21 @@ class S3AwsUploader():
         return self.__upload(filename, filename.replace('.','-')+'/',
                              ufile,user_folder,bucket_name)
 
-    def __upload(self,filename,folder_name,data,user_folder,bucket_name):
+    def __upload(self,filename,folder_name,data,user_folder,bucket_name, metadata = None):
         if(self.bucketExist(bucket_name)):
             user_folder = self.__checkFolderString__(user_folder)
             # Upload de file
-            self.client.upload_fileobj(data, bucket_name, user_folder +folder_name + filename)
+            if metadata:
+                self.client.upload_fileobj(data, bucket_name, user_folder +folder_name + filename, ExtraArgs={'Metadata': metadata})
+            else:
+                self.client.upload_fileobj(data, bucket_name, user_folder +folder_name + filename)
+                
             # Check it was created, because upload_fileobj returns None
             return self.objectExist(bucket_name, user_folder + folder_name + filename)
         else:
             return False
 
-    def uploadFile(self,filepath,folder_name,user_folder,bucket_name):
+    def uploadFile(self,filepath,folder_name,user_folder,bucket_name,metadata = None):
         with open(filepath) as fb:
-            return self.__upload(filepath.split('/')[-1],folder_name,fb,user_folder,bucket_name)
+            return self.__upload(filepath.split('/')[-1],folder_name,fb,
+                                 user_folder,bucket_name, metadata = metadata)

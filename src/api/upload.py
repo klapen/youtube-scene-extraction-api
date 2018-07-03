@@ -44,16 +44,18 @@ def send_video(video, title, bucket_name, username, scene_detection_mode = 'cont
 
     # ToDo: Add metadata on upload files
     aws_uploader = aws.S3AwsUploader()
-    if aws_uploader.uploadVideoFile(video,username,bucket_name):
+    folder_name = video.filename.replace('.','-')+'/'
+    if aws_uploader.uploadFile(os.path.join(tmp_folder,video.filename),folder_name,
+                               username,bucket_name):
         fail_upload_files = []
-        folder_name = video.filename.replace('.','-')+'/'
         for f in glob.glob(os.path.join(tmp_folder,video.filename+"*.jpg")):
             time = scene_data['scenes_time'][scene_data["scenes_file"].index(f)]
             if not aws_uploader.uploadFile(f,folder_name,username,bucket_name,
                                            metadata = {'video':video.filename,'time':time}):
                 fail_upload_files.append(f)
         if fail_upload_files:
-            return {'status':'error','message':'Error uploading scene files', 'not_uploaded':fail_upload_files}
+            return {'status':'error','message':'Error uploading scene files',
+                    'not_uploaded':fail_upload_files}
         else:
             return {'status':'ok'}
     else:

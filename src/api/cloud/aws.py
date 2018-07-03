@@ -36,7 +36,7 @@ class S3AwsUploader():
         return len(self.getObjects(bucket_name,folder_name)) > 0
         
     def objectExist(self, bucket_name, key):
-        return len(self.getObjects(bucket_name,key)) == 1
+        return len([x.key for x in self.getObjects(bucket_name,key) if x.key == key]) == 1            
     
     def createFolder(self,name,bucket_name):
         name = self.__checkFolderString__(name)
@@ -60,9 +60,10 @@ class S3AwsUploader():
             user_folder = self.__checkFolderString__(user_folder)
             # Upload de file
             if metadata:
-                self.client.upload_fileobj(data, bucket_name, user_folder +folder_name + filename, ExtraArgs={'Metadata': metadata})
+                self.client.upload_fileobj(data, bucket_name, user_folder + folder_name + filename,
+                                           ExtraArgs={'Metadata': metadata})
             else:
-                self.client.upload_fileobj(data, bucket_name, user_folder +folder_name + filename)
+                self.client.upload_fileobj(data, bucket_name, user_folder + folder_name + filename)
                 
             # Check it was created, because upload_fileobj returns None
             return self.objectExist(bucket_name, user_folder + folder_name + filename)

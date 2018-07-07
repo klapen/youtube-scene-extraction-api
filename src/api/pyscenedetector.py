@@ -23,9 +23,9 @@ def video_detection(filepath,detector,username,save_images = True):
     # By default it is content detector
     detector = detector.lower()
     if(detector == 'threshold'):
-        detector_list = [scenedetect.detectors.ContentDetector(threshold = 30, min_scene_len = 15)]
-    else:
         detector_list = [scenedetect.detectors.ThresholdDetector(threshold = 16, min_percent = 0.9)]
+    else:
+        detector_list = [scenedetect.detectors.ContentDetector(threshold = 30, min_scene_len = 15)]
         
     video_fps, frames_read = scenedetect.detect_scenes_file(filepath, scene_list, detector_list, save_images = save_images, quiet_mode=True)
 
